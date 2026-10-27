@@ -1,0 +1,15 @@
+name: forecast-check
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pandas
+  - numpy
+  - matplotlib
+  - requests
+  - pyarrow
+  - pyyaml
+  - pytest
+  - ruff
+  - jupyterlab
+  - ipykernel
