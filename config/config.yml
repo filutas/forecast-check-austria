@@ -1,0 +1,15 @@
+period:
+  start: '2025-01-01'
+  end: '2025-12-31'
+models:
+  - ecmwf_ifs025
+  - gfs_seamless
+  - icon_seamless
+stations:
+  - {id: '5904',  name: 'Wien Hohe Warte',        lat: 48.24861, lon: 16.35639, elevation: 198}
+  - {id: '16414', name: 'Graz Universitaet',      lat: 47.08,    lon: 15.448056, elevation: 366}
+  - {id: '3202',  name: 'Linz Stadt',             lat: 48.29639, lon: 14.28528, elevation: 262}
+  - {id: '6300',  name: 'Salzburg Flughafen',     lat: 47.78944, lon: 13.00861, elevation: 430}
+  - {id: '11804', name: 'Innsbruck Flughafen',    lat: 47.25999, lon: 11.35667, elevation: 578}
+  - {id: '20212', name: 'Klagenfurt Flughafen',   lat: 46.64833, lon: 14.31833, elevation: 450}
+  - {id: '15411', name: 'Sonnblick',              lat: 47.05417, lon: 12.9575,  elevation: 3109}

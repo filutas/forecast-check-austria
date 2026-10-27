@@ -38,7 +38,7 @@ Measure how accurate free numerical weather forecasts are for Austrian stations,
 |---|------|-----------|--------|-----------|------------------------|
 | R1 | API names, endpoints or parameters differ from what I expect | Medium | High | Verify in the documentation first, test with a tiny request, record changes in CHANGELOG | |
 | R2 | Rate limits or temporary API errors during download | Medium | Medium | Cache every chunk on disk, retries with back-off, pauses between requests, download in chunks | |
-| R3 | Time zone or time-stamp convention mismatch between observations and forecasts | High | High | Use UTC everywhere, read the documentation of both services, sanity check plot before analysis | |
+| R3 | Time zone or time-stamp convention mismatch between observations and forecasts | High | High | Use UTC everywhere, read the documentation of both services, sanity check plot before analysis | X - checked with a shift test, inconclusive, mitigated by daily sums.|
 | R4 | Missing observations or forecasts | High | Medium | Never fill gaps, drop missing rows, report counts per station, require 24 hours for daily sums | |
 | R5 | A model has no archived forecasts for the full period | Medium | Medium | Shorten the period or drop the model, document it | |
 | R6 | Misleading conclusions (point station versus model grid cell, mountain station elevation) | Medium | High | State limitations in README, report station and model elevation, avoid over-claiming | |
@@ -56,11 +56,13 @@ Measure how accurate free numerical weather forecasts are for Austrian stations,
 
 ## 7. Data facts
 
-(Fill in during Parts 6 and 8.)
-
-- Observation time stamps are in: (UTC? check documentation)
-- Hourly precipitation in the observations is the sum over: (hour ending at the time stamp? check documentation)
-- Forecast precipitation (Open-Meteo hourly) is the sum over: (preceding hour per documentation, confirm)
-- Rows with missing values per station: 
+- Observation time stamps: returned with +00:00, treated as UTC.
+- Observation precipitation (`rr`): hourly sum in mm ("Stundensumme" per dataset metadata). The metadata does not state whether the hour ends or starts at the time stamp. To be checked empirically in the sanity check (see Part 7 note below).
+- Forecast precipitation (Open-Meteo hourly): sum of the preceding hour per Open-Meteo documentation (to confirm on the documentation page).
+- Quality flags (`tl_flag`, `rr_flag`) exist in the dataset but are not used in v1.0.
+- Observation download for January 2025, station Wien Hohe Warte (5904): 744 of 744 hourly values present for temperature and precipitation.
+- Station changes: Innsbruck Universität had no temperature values in July 2025 and was replaced by Innsbruck Flughafen. Sonnblick has no precipitation values, so it is evaluated for temperature only.
+- Rows with missing values per station: (fill in after Part 8)
 - How missing values were handled: dropped, never filled
-- Models or periods changed because of availability:
+- Models or periods changed because of availability: (fill in after Part 7)
+- Precipitation time convention checked empirically (lead 1, ECMWF IFS, Jul to Sep 2025, Wien/Graz/Salzburg): correlation is flat across shifts of -2 to +2 hours (mean r = 0.332 at 0 h versus 0.316 to 0.321 at ±1 h), and the best shift differs by station (Wien -1 h, Salzburg -1 h or 0 h, Graz +1 h). The test is inconclusive at hourly resolution. No correction applied. Precipitation is therefore evaluated as daily UTC sums, which makes a one-hour offset negligible.
