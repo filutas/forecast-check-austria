@@ -26,7 +26,7 @@ Measure how accurate free numerical weather forecasts are for Austrian stations,
 
 | ID | Milestone | Target | Status |
 |----|-----------|--------|--------|
-| M1 | Data access: observations and forecasts download, cached, sanity check plot is plausible | Day 1 | [ ] |
+| M1 | Data access: observations and forecasts download, cached, sanity check plot is plausible | Day 1 | [X] |
 | M2 | Merged dataset built (`data/processed/merged.parquet`), row counts checked | Day 2 | [ ] |
 | M3 | Metrics implemented with passing tests | Day 2 | [ ] |
 | M4 | Three figures produced and interpreted | Day 3 | [ ] |
@@ -38,7 +38,7 @@ Measure how accurate free numerical weather forecasts are for Austrian stations,
 |---|------|-----------|--------|-----------|------------------------|
 | R1 | API names, endpoints or parameters differ from what I expect | Medium | High | Verify in the documentation first, test with a tiny request, record changes in CHANGELOG | |
 | R2 | Rate limits or temporary API errors during download | Medium | Medium | Cache every chunk on disk, retries with back-off, pauses between requests, download in chunks | |
-| R3 | Time zone or time-stamp convention mismatch between observations and forecasts | High | High | Use UTC everywhere, read the documentation of both services, sanity check plot before analysis | X - checked with a shift test, inconclusive, mitigated by daily sums.|
+| R3 | Time zone or time-stamp convention mismatch between observations and forecasts | High | High | Use UTC everywhere, read the documentation of both services, sanity check plot before analysis | X - checked with a shift test, inconclusive, mitigated by daily sums. Checked with a shift test in July, minimum at 0 h, no problem found.|
 | R4 | Missing observations or forecasts | High | Medium | Never fill gaps, drop missing rows, report counts per station, require 24 hours for daily sums | |
 | R5 | A model has no archived forecasts for the full period | Medium | Medium | Shorten the period or drop the model, document it | |
 | R6 | Misleading conclusions (point station versus model grid cell, mountain station elevation) | Medium | High | State limitations in README, report station and model elevation, avoid over-claiming | |
@@ -57,12 +57,13 @@ Measure how accurate free numerical weather forecasts are for Austrian stations,
 ## 7. Data facts
 
 - Observation time stamps: returned with +00:00, treated as UTC.
-- Observation precipitation (`rr`): hourly sum in mm ("Stundensumme" per dataset metadata). The metadata does not state whether the hour ends or starts at the time stamp. To be checked empirically in the sanity check (see Part 7 note below).
-- Forecast precipitation (Open-Meteo hourly): sum of the preceding hour per Open-Meteo documentation (to confirm on the documentation page).
+- Observation precipitation (`rr`): hourly sum in mm ("Stundensumme" per dataset metadata). The metadata does not state whether the hour ends or starts at the time stamp.
+- Forecast precipitation (Open-Meteo hourly): sum of the preceding hour per Open-Meteo documentation (to confirm).
 - Quality flags (`tl_flag`, `rr_flag`) exist in the dataset but are not used in v1.0.
-- Observation download for January 2025, station Wien Hohe Warte (5904): 744 of 744 hourly values present for temperature and precipitation.
+- Precipitation time convention checked empirically (lead 1, ECMWF IFS, Jul to Sep 2025, Wien/Graz/Salzburg): correlation is flat across shifts of -2 to +2 hours, inconclusive, no correction applied. Precipitation is evaluated as daily UTC sums.
+- Temperature time alignment checked (Wien Hohe Warte, ECMWF IFS, lead 1): in July 2025 the mean absolute error is lowest at shift 0 h (1.26 °C) and rises on both sides (1.36 °C at -1 h, 1.48 °C at +1 h, 1.74 °C at -2 h, 1.92 °C at +2 h). The winter test (January) was inconclusive because of the weak daily cycle. Observations and forecasts are aligned in UTC, no correction applied.
+- January 2025 errors, Wien Hohe Warte, ECMWF IFS: MAE grows from 1.73 °C (lead 1) to 2.69 °C (lead 5); bias between -0.31 and +0.08 °C.
 - Station changes: Innsbruck Universität had no temperature values in July 2025 and was replaced by Innsbruck Flughafen. Sonnblick has no precipitation values, so it is evaluated for temperature only.
 - Rows with missing values per station: (fill in after Part 8)
 - How missing values were handled: dropped, never filled
-- Models or periods changed because of availability: (fill in after Part 7)
-- Precipitation time convention checked empirically (lead 1, ECMWF IFS, Jul to Sep 2025, Wien/Graz/Salzburg): correlation is flat across shifts of -2 to +2 hours (mean r = 0.332 at 0 h versus 0.316 to 0.321 at ±1 h), and the best shift differs by station (Wien -1 h, Salzburg -1 h or 0 h, Graz +1 h). The test is inconclusive at hourly resolution. No correction applied. Precipitation is therefore evaluated as daily UTC sums, which makes a one-hour offset negligible.
+- Models or periods changed because of availability: (fill in after the model check)
