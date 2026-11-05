@@ -37,9 +37,9 @@ Measure how accurate free numerical weather forecasts are for Austrian stations,
 | # | Risk | Likelihood | Impact | Mitigation | Occurred? / What I did |
 |---|------|-----------|--------|-----------|------------------------|
 | R1 | API names, endpoints or parameters differ from what I expect | Medium | High | Verify in the documentation first, test with a tiny request, record changes in CHANGELOG | |
-| R2 | Rate limits or temporary API errors during download | Medium | Medium | Cache every chunk on disk, retries with back-off, pauses between requests, download in chunks | |
-| R3 | Time zone or time-stamp convention mismatch between observations and forecasts | High | High | Use UTC everywhere, read the documentation of both services, sanity check plot before analysis | X - checked with a shift test, inconclusive, mitigated by daily sums. Checked with a shift test in July, minimum at 0 h, no problem found.|
-| R4 | Missing observations or forecasts | High | Medium | Never fill gaps, drop missing rows, report counts per station, require 24 hours for daily sums | |
+| R2 | Rate limits or temporary API errors during download | Medium | Medium | Cache every chunk on disk, retries with back-off, pauses between requests, download in chunks |Occurred: several “connection reset” errors during the build; retries with back-off recovered automatically, no data lost. |
+| R3 | Time zone or time-stamp convention mismatch between observations and forecasts | High | High | Use UTC everywhere, read the documentation of both services, sanity check plot before analysis | Checked with a shift test, inconclusive, mitigated by daily sums. Checked with a shift test in July, minimum at 0 h, no problem found.|
+| R4 | Missing observations or forecasts | High | Medium | Never fill gaps, drop missing rows, report counts per station, require 24 hours for daily sums | Occurred: gaps up to 120 hours at Linz; dropped, not filled |
 | R5 | A model has no archived forecasts for the full period | Medium | Medium | Shorten the period or drop the model, document it | |
 | R6 | Misleading conclusions (point station versus model grid cell, mountain station elevation) | Medium | High | State limitations in README, report station and model elevation, avoid over-claiming | |
 | R7 | Environment or tooling problems (conda, Git, Windows setup) | Medium | Medium | Keep fallback (pip and venv), write problems and fixes in this plan | |
@@ -64,6 +64,7 @@ Measure how accurate free numerical weather forecasts are for Austrian stations,
 - Temperature time alignment checked (Wien Hohe Warte, ECMWF IFS, lead 1): in July 2025 the mean absolute error is lowest at shift 0 h (1.26 °C) and rises on both sides (1.36 °C at -1 h, 1.48 °C at +1 h, 1.74 °C at -2 h, 1.92 °C at +2 h). The winter test (January) was inconclusive because of the weak daily cycle. Observations and forecasts are aligned in UTC, no correction applied.
 - January 2025 errors, Wien Hohe Warte, ECMWF IFS: MAE grows from 1.73 °C (lead 1) to 2.69 °C (lead 5); bias between -0.31 and +0.08 °C.
 - Station changes: Innsbruck Universität had no temperature values in July 2025 and was replaced by Innsbruck Flughafen. Sonnblick has no precipitation values, so it is evaluated for temperature only.
-- Rows with missing values per station: (fill in after Part 8)
-- How missing values were handled: dropped, never filled
-- Models or periods changed because of availability: (fill in after the model check)
+- Full-year build (2025, 7 stations, 3 models, leads 1 to 5): 919,800 merged rows, 43,800 per station and model. Forecasts have no missing values. Missing observation hours: temperature Linz 120, Wien 32, Klagenfurt 24, Salzburg 6, others 0; precipitation Graz 1, Klagenfurt 2, Sonnblick 8,758 (no precipitation measurement).
+- Missing values are dropped in the metrics and never filled. Daily precipitation sums use only days with all 24 hours present.
+- Models changed because of availability: none.
+- Models checked for Q1 2025 (Wien Hohe Warte, leads 1 to 5): ecmwf_ifs025, gfs_seamless and icon_seamless all return 10800 rows with no missing values. No model removed so far. Full-year completeness is checked in the build_dataset printout.
