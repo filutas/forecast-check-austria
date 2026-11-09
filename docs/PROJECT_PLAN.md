@@ -52,10 +52,10 @@ Measure how accurate free numerical weather forecasts are for Austrian stations,
 
 - [x] One command (or one notebook) reproduces all figures from cached or downloaded data.
 - [x] At least 6 stations, 2 models, 5 lead times, 2 variables evaluated.
-- [ ] Metric functions covered by passing tests, and CI is green.
+- [x] Metric functions covered by passing tests, and CI is green.
 - [x] README shows the main figure, the key findings, data licences and limitations.
-- [ ] PROJECT_PLAN.md lists risks that actually occurred and what was done about them (done once this version is committed).
-- [ ] Tagged release v1.0.
+- [x] PROJECT_PLAN.md lists risks that actually occurred and what was done about them.
+- [x] Tagged release v1.0.
 
 ## 7. Data facts
 

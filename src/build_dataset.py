@@ -1,8 +1,10 @@
 from pathlib import Path
+
 import pandas as pd
 import yaml
-from src.observations import fetch_station
+
 from src.forecasts import fetch_forecasts
+from src.observations import fetch_station
 
 
 def main():

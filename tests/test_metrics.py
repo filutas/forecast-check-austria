@@ -1,7 +1,9 @@
 import math
+
 import pandas as pd
 import pytest
-from src.metrics import temp_metrics, daily_precip, precip_scores
+
+from src.metrics import daily_precip, precip_scores, temp_metrics
 
 
 def test_temp_metrics_hand_calculated():

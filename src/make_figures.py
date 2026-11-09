@@ -1,9 +1,12 @@
 from pathlib import Path
+
 import matplotlib
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import pandas as pd
-from src.metrics import temp_metrics, daily_precip, precip_scores
+
+from src.metrics import daily_precip, precip_scores, temp_metrics
 
 FIG = Path('outputs/figures')
 FIG.mkdir(parents=True, exist_ok=True)
