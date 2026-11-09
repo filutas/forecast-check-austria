@@ -8,7 +8,8 @@ from src.observations import fetch_station
 
 
 def main():
-    cfg = yaml.safe_load(open('config/config.yml', encoding='utf-8'))
+    with open('config/config.yml', encoding='utf-8') as f:
+        cfg = yaml.safe_load(f)
     start, end = cfg['period']['start'], cfg['period']['end']
     frames = []
     for st in cfg['stations']:
