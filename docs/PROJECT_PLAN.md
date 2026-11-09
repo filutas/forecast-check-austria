@@ -1,6 +1,6 @@
 # Project Plan: Forecast Check Austria
 
-Owner: István Attila Filutás | Started: 2026-10-27 | Release v1.0: (fill in date) | Planned effort: about 3 working days of focused work
+Owner: István Attila Filutás | Started: 2026-10-27 | Release v1.0: 09.11.2026 | Planned effort: about 3 working days of focused work
 
 ## 1. Goal
 
@@ -26,13 +26,13 @@ Measure how accurate free numerical weather forecasts are for Austrian stations,
 
 ## 4. Milestones
 
-| ID | Milestone | Target | Status |
-|----|-----------|--------|--------|
+| ID | Milestone | Status |
+|----|-----------|--------|
 | M1 | Data access: observations and forecasts download, cached, sanity check plot is plausible | [x] |
 | M2 | Merged dataset built (`data/processed/merged.parquet`), row counts checked | [x] |
-| M3 | Metrics implemented with passing tests | [x] (confirm `pytest -q` passes) |
+| M3 | Metrics implemented with passing tests | [x] |
 | M4 | Three figures produced and interpreted | [x] |
-| M5 | README, CHANGELOG, CI green, release v1.0 published | [ ] README written; CI, changelog and release pending |
+| M5 | README, CHANGELOG, CI green, release v1.0 published | [x] |
 
 ## 5. Risks
 
@@ -61,7 +61,7 @@ Measure how accurate free numerical weather forecasts are for Austrian stations,
 
 - Observation time stamps: returned with +00:00, treated as UTC.
 - Observation precipitation (`rr`): hourly sum in mm ("Stundensumme" per dataset metadata). The metadata does not state whether the hour ends or starts at the time stamp.
-- Forecast precipitation (Open-Meteo hourly): sum of the preceding hour per Open-Meteo documentation (to confirm on the documentation page before release).
+- Forecast precipitation (Open-Meteo hourly): confirmed in the Open-Meteo documentation (hourly parameter definition, https://open-meteo.com/en/docs) as a sum over the preceding hour, so a value at 13:00 covers 12:00 to 13:00. That page describes the standard forecast API, and the Previous Runs API uses the same hourly variable names, so the same definition is assumed. The observation side is still unconfirmed (see the precipitation time convention note above), which is why precipitation is evaluated as daily sums.
 - Quality flags (`tl_flag`, `rr_flag`) exist in the dataset but are not used in v1.0.
 - Precipitation time convention checked empirically (lead 1, ECMWF IFS, Jul to Sep 2025, Wien/Graz/Salzburg): correlation is flat across shifts of -2 to +2 hours, inconclusive, no correction applied. Precipitation is evaluated as daily UTC sums.
 - Temperature time alignment checked (Wien Hohe Warte, ECMWF IFS, lead 1): in July 2025 the mean absolute error is lowest at shift 0 h (1.26 °C) and rises on both sides (1.36 °C at -1 h, 1.48 °C at +1 h, 1.74 °C at -2 h, 1.92 °C at +2 h). The winter test (January) was inconclusive because of the weak daily cycle. Observations and forecasts are aligned in UTC, no correction applied.
@@ -78,14 +78,3 @@ Measure how accurate free numerical weather forecasts are for Austrian stations,
 - Mean temperature bias at lead 1 is small (ECMWF -0.50 °C, GFS +0.03 °C, ICON +0.14 °C), except at Sonnblick (ECMWF -1.70 °C, GFS -1.09 °C, ICON +0.25 °C). Cause not investigated.
 - Rain days (at least 1 mm, 6 stations): POD falls from 0.84 to 0.89 (day 1) to 0.54 to 0.74 (day 5); FAR rises from 0.22 to 0.34 (day 1) to 0.42 to 0.47 (day 5). ECMWF has the highest POD at every lead time.
 - Statements apply to these stations, this year and these model products only.
-
-## 9. Open items before release
-
-- [ ] Run `pytest -q` and `ruff check src tests`; fix any messages.
-- [ ] Add `.github/workflows/ci.yml` and confirm a green check in the Actions tab.
-- [ ] Create CHANGELOG.md.
-- [ ] Confirm the Open-Meteo precipitation convention in their documentation.
-- [ ] Optional: run `src/check_elevation.py` for the Sonnblick paragraph.
-- [ ] Fresh-start test of the README quick start in a new folder.
-- [ ] Publish release v1.0, add repository description and topics, pin the repository.
-- [ ] Close the M1 to M5 issues on the GitHub board.

@@ -41,7 +41,7 @@ POD = probability of detection (share of observed rain days that were forecast).
 Requires Git and [Miniforge](https://github.com/conda-forge/miniforge) (conda).
 
 ```
-git clone https://github.com/YOUR-USERNAME/forecast-check-austria.git
+git clone https://github.com/filutas/forecast-check-austria.git
 cd forecast-check-austria
 conda env create -f environment.yml
 conda activate forecast-check
@@ -84,15 +84,15 @@ Dataset size: 919,800 merged rows (7 stations, 3 models, 5 lead times, 8,760 hou
 This project was planned and documented like a small delivery project.
 
 - [Project plan with scope, milestones, risk register and data facts](docs/PROJECT_PLAN.md)
-- [Changelog](CHANGELOG.md)
 - Project board and issues: see the Projects tab of this repository.
 
-Risks that actually occurred, and what was done: the API address changed from what the documentation example implied (fixed after checking the endpoint), several connection resets during download (retries with back-off recovered automatically), gaps in station data (dropped, not filled), and one unsuitable station (replaced after an availability check).
+Risks that actually occurred, and what was done: the GeoSphere API address in my first draft was outdated (fixed after comparing it with the documentation), several connection resets during download (retries with back-off recovered automatically), gaps in station data (dropped, not filled), and one unsuitable station (replaced after an availability check).
 
 ## Repository structure
 
 ```
 config/        station list, period and models
+checks/        one-off scripts used while building the project
 src/           download, merge, metrics and figure scripts
 tests/         unit tests for the metric functions
 docs/          project plan
