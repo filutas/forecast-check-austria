@@ -32,13 +32,13 @@ Measure how accurate free numerical weather forecasts are for Austrian stations,
 | M2 | Merged dataset built (`data/processed/merged.parquet`), row counts checked | [x] |
 | M3 | Metrics implemented with passing tests | [x] |
 | M4 | Three figures produced and interpreted | [x] |
-| M5 | README, CHANGELOG, CI green, release v1.0 published | [x] |
+| M5 | README, CI green, release v1.0 published | [x] |
 
 ## 5. Risks
 
 | # | Risk | Likelihood | Impact | Mitigation | Occurred? / What I did |
 |---|------|-----------|--------|-----------|------------------------|
-| R1 | API names, endpoints or parameters differ from what I expect | Medium | High | Verify in the documentation first, test with a tiny request, record changes in CHANGELOG | Occurred: the GeoSphere Data Hub address in my first code was outdated (host is now dataset.api.hub.geosphere.at). Found by comparing with the documentation, fixed and recorded in the CHANGELOG. |
+| R1 | API names, endpoints or parameters differ from what I expect | Medium | High | Verify in the documentation first, test with a tiny request | Occurred: the GeoSphere Data Hub address in my first code was outdated (host is now dataset.api.hub.geosphere.at). Found by comparing with the documentation |
 | R2 | Rate limits or temporary API errors during download | Medium | Medium | Cache every chunk on disk, retries with back-off, pauses between requests, download in chunks | Occurred: several "connection reset" errors during the build; retries with back-off recovered automatically, no data lost. |
 | R3 | Time zone or time-stamp convention mismatch between observations and forecasts | High | High | Use UTC everywhere, read the documentation of both services, sanity check plot before analysis | Checked with shift tests. Temperature: July minimum at 0 h, no problem found (January test too flat to be conclusive). Precipitation: hourly test inconclusive, mitigated by evaluating daily sums. No correction applied. |
 | R4 | Missing observations or forecasts | High | Medium | Never fill gaps, drop missing rows, report counts per station, require 24 hours for daily sums | Occurred: gaps up to 120 hours at Linz; dropped, not filled. Forecasts had no gaps. |
